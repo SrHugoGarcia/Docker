@@ -41,5 +41,68 @@ const createCliente = async (req, res,next) => {
     }
 };
 
+const getAllClientes = async (req, res, next) => {
+    try {
+      const clientes = await Cliente.findAll(); // Obtener todos los clientes de la base de datos
+      res.status(200).json(clientes);
+    } catch (err) {
+      console.log(err.message);
+      res.status(500).json({ mensaje: err.message });
+    }
+  };
 
-module.exports = { createCliente };
+  const getCliente = async (req, res, next) => {
+    try {
+        console.log(req.params)
+      const clienteId = req.params.id; // Obtener el ID del cliente de los parámetros de la solicitud
+      const cliente = await Cliente.findByPk(clienteId); // Buscar el cliente por su ID en la base de datos
+      if (!cliente) {
+        res.status(404).json({ mensaje: "Cliente no encontrado" });
+      } else {
+        res.status(200).json(cliente);
+      }
+    } catch (err) {
+      console.log(err.message);
+      res.status(500).json({ mensaje: err.message });
+    }
+  };
+
+  const updateCliente = async (req, res, next) => {
+    try {
+      const clienteId = req.params.clienteId; // Obtener el ID del cliente de los parámetros de la solicitud
+      const {
+        rfc,
+        nombre,
+        apellidoPaterno,
+        apellidoMaterno,
+        direccion,
+        celular,
+        fechaNacimiento,
+      } = req.body; // Obtener los datos actualizados del cliente de los datos de la solicitud
+  
+      const cliente = await Cliente.findByPk(clienteId); // Buscar el cliente por su ID en la base de datos
+      if (!cliente) {
+        res.status(404).json({ mensaje: "Cliente no encontrado" });
+      } else {
+        await cliente.update({
+          rfc,
+          nombre,
+          apellidoPaterno,
+          apellidoMaterno,
+          direccion,
+          celular,
+          fechaNacimiento,
+        }); // Actualizar los datos del cliente en la base de datos
+        res.status(200).json(cliente);
+      }
+    } catch (err) {
+      console.log(err.message);
+      res.status(500).json({ mensaje: err.message });
+    }
+  };
+  
+  
+  
+
+
+module.exports = { createCliente, getAllClientes, getCliente,updateCliente };
