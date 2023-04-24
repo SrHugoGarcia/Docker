@@ -1,0 +1,45 @@
+const Cliente = require("../models/cliente");
+
+const createCliente = async (req, res,next) => {
+    try {
+        const {
+            rfc,
+            nombre,
+            apellidoPaterno,
+            apellidoMaterno,
+            direccion,
+            celular,
+            fechaNacimiento,
+        } = req.body;
+        if (
+            !rfc ||
+            !nombre ||
+            !apellidoMaterno ||
+            !apellidoPaterno ||
+            !direccion ||
+            !celular ||
+            !fechaNacimiento ||
+            !direccion
+        ) {
+            res
+                .status(500)
+                .json({ mensaje: "Error todos los campos son obligatorios" });
+        }
+        const cliente = await Cliente.create({
+            rfc,
+            nombre,
+            apellidoPaterno,
+            apellidoMaterno,
+            direccion,
+            celular,
+            fechaNacimiento,
+        });
+        res.status(201).json(cliente);
+    } catch (err) {
+        console.log(err.message);
+        res.status(500).json({ mensaje: err.message});
+    }
+};
+
+
+module.exports = { createCliente };
